@@ -131,11 +131,6 @@ Keywords analyzing the sequence of the last 10 seconds.
 ```
 You have the option to add or remove keywords in the `.env` file.
 
-
-## License
-
-This project is open-source under the MIT license—no need to credit me. The vision capture functions have agentic potential if you build upon and tweak a few lines in the code. The only thing I’d like to ask is, if you’re reading this and planning on reusing any part of the code from this repository in your own projects, to "consider" sharing it open-source later. It's not required, but that would make me happy if we can collectively push things one step forward for everyone else :)
-
 ## Acknowledgements
 - [AIVisionCompanion](https://github.com/Vinventive/AIVisionCompanion) Original Repository for AIVisionCompanion.
 - [Test voice sample credit](https://www.youtube.com/@miminggu) (used here only for testing) This voice sample comes from a random meme I've found on internet by author miminggu. I Don't remember which one exactly.
