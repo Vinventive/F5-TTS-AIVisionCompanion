@@ -132,6 +132,7 @@ Keywords analyzing the sequence of the last 10 seconds.
 You have the option to add or remove keywords in the `.env` file.
 
 ## Acknowledgements
+- [F5-TTS](https://github.com/SWivid/F5-TTS) Original Repostory for F5-TTS (source code)
 - [AIVisionCompanion](https://github.com/Vinventive/AIVisionCompanion) Original Repository for AIVisionCompanion.
 - [Test voice sample credit](https://www.youtube.com/@miminggu) (used here only for testing) This voice sample comes from a random meme I've found on internet by author miminggu. I Don't remember which one exactly.
 
