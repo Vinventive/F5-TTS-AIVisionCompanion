@@ -448,7 +448,7 @@ def generate_audio_sync(text, exp_name="F5-TTS"):
     
     return buffer.getvalue()
 
-# Load the Florence-2 Model for Image Captioning
+# Load the Florence-2 Model for Image ing
 def fixed_get_imports(filename):
     if not str(filename).endswith("modeling_florence2.py"):
         return get_imports(filename)
@@ -465,7 +465,7 @@ florence2_device = 'cuda' if torch.cuda.is_available() else 'cpu'
 florence2_model.to(florence2_device)
 print("Florence-2 model loaded.")
 
-def generate_caption(image, task_prompt='<CAPTION>'):
+def generate_caption(image, task_prompt='<MORE_DETAILED_CAPTION>'):
     device = florence2_device
     model = florence2_model
     processor = florence2_processor
