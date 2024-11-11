@@ -609,9 +609,9 @@ def continuous_audio_recording():
 def transcription_worker():
     combined_audio_data = []
     combined_duration = 0.0  # in seconds
-    target_min_duration = 1.0  # Minimum duration to consider processing
+    target_min_duration = 0.3  # Minimum duration to consider processing
     target_max_duration = 10.0  # Maximum duration to prevent long waits
-    min_transcribe_duration = 1.0  # Minimum duration after silence removal
+    min_transcribe_duration = 0.3  # Minimum duration after silence removal
     silence_timeout = 2.0  # Increased to 2.0 seconds
     last_voice_activity_time = time.time()
 
