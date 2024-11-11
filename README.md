@@ -1,5 +1,5 @@
 
-# AI Vision Companion ( [F5-TTS fork for convenience](https://github.com/SWivid/F5-TTS) )
+# AI Vision Companion as [F5-TTS](https://github.com/SWivid/F5-TTS) fork for convenience.
 
 This repository features an AI vision companion/assistant that merges visual input capture with audio transcription and synthesis through various APIs and libraries. The script detects microphone input, transcribes it, processes vision input from the specified window, creates very detailed caption with Florence-2, and produces responses using a Large Language Model (OpenAI API) and Text-To-Speech (F5-TTS).
 
@@ -81,9 +81,9 @@ VISION_KEYWORDS=scene,sight,video,frame,activity,happen,going
 ```
 python visioncompanion.py
 ```
-When running the script for the first time, it might take a while to download the `faster-whisper-large-v3` model for local use.
+When running the script for the first time, it might take a while to download the speech recognition model `faster-whisper-large-v3` as well as image captioning model `florence-2-base-ft` for local use.
 
-### 2. Choose if you want to launch the app with vision capture preview window. ('y' for yes or 'n' for no)
+### 2. Choose if you want to launch the app with vision capture preview window (`y` for yes or `n` for no).
 ```
 Using cuda:0 device
 Loading Florence-2 model...
@@ -130,6 +130,8 @@ Keywords analyzing the sequence of the last 10 seconds.
 "scene", "sight",  "video", "frame", "activity", "happen", "going"
 ```
 You have the option to add or remove keywords in the `.env` file.
+
+If you receive response: `Assistant: Error in generating response` make sure to update OpenAI API key inside `.env`. Your API key might be incorrect or missing - this variable cannot be empty.
 
 ## Acknowledgements
 - [F5-TTS](https://github.com/SWivid/F5-TTS) Original Repostory for F5-TTS (source code)
