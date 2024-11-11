@@ -1,7 +1,7 @@
 
-# AI Vision Companion (inside F5-TTS fork for convenience)
+# AI Vision Companion ( [F5-TTS fork for convenience](https://github.com/SWivid/F5-TTS) )
 
-This repository features an AI vision companion/assistant that merges visual input capture with audio transcription and synthesis through various APIs and libraries. The script detects microphone input, transcribes it, processes vision input from the specified window, and produces responses using a Multimodal Large Language Model (OpenAI API) and Text-To-Speech (F5-TTS).
+This repository features an AI vision companion/assistant that merges visual input capture with audio transcription and synthesis through various APIs and libraries. The script detects microphone input, transcribes it, processes vision input from the specified window, creates very detailed caption with Florence-2, and produces responses using a Large Language Model (OpenAI API) and Text-To-Speech (F5-TTS).
 
 ## Features
 
