@@ -129,8 +129,9 @@ playback_thread = None
 playback_stop_event = threading.Event()
 stop_recording_event = threading.Event()
 
-# Define energy threshold
-ENERGY_THRESHOLD = 1000  # Adjust this value based on your environment
+# Noise gate to reduce whisper halucinations - adjust this value based on your current environment background noise level 
+
+ENERGY_THRESHOLD = 0 # Define energy threshold (0 - no noise gate (dynamic mic in quiet room), 1000 - strong noise gate (cardioid condenser mic placed next to your mouth with a lot of false input like typing on keyboard, mouse clicks etc.))
 
 def log_memory_usage():
     process = psutil.Process()
@@ -521,7 +522,7 @@ async def stream_openai_response(client, model, messages, max_tokens, temperatur
         logging.error(f"Error in stream_openai_response: {e}")
         yield "Error in generating response"
 
-# Global variables for TCP server
+# Global variables for TCP server (this was added to communicate with the VR overlay app in Unity3D I'm currently working on)
 clients = []
 clients_lock = threading.Lock()
 
