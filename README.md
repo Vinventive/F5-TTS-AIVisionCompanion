@@ -1,150 +1,143 @@
-# F5-TTS: A Fairytaler that Fakes Fluent and Faithful Speech with Flow Matching
 
-[![python](https://img.shields.io/badge/Python-3.10-brightgreen)](https://github.com/SWivid/F5-TTS)
-[![arXiv](https://img.shields.io/badge/arXiv-2410.06885-b31b1b.svg?logo=arXiv)](https://arxiv.org/abs/2410.06885)
-[![demo](https://img.shields.io/badge/GitHub-Demo%20page-orange.svg)](https://swivid.github.io/F5-TTS/)
-[![hfspace](https://img.shields.io/badge/🤗-Space%20demo-yellow)](https://huggingface.co/spaces/mrfakename/E2-F5-TTS)
-[![msspace](https://img.shields.io/badge/🤖-Space%20demo-blue)](https://modelscope.cn/studios/modelscope/E2-F5-TTS)
-[![lab](https://img.shields.io/badge/X--LANCE-Lab-grey?labelColor=lightgrey)](https://x-lance.sjtu.edu.cn/)
-<img src="https://github.com/user-attachments/assets/12d7749c-071a-427c-81bf-b87b91def670" alt="Watermark" style="width: 40px; height: auto">
+# AI Vision Companion as [F5-TTS](https://github.com/SWivid/F5-TTS) fork for convenience.
 
-**F5-TTS**: Diffusion Transformer with ConvNeXt V2, faster trained and inference.
+This repository features an AI vision companion/assistant that merges visual input capture with audio transcription and synthesis through various APIs and libraries. The script detects microphone input, transcribes it, processes vision input from the specified window, creates very detailed caption with Florence-2, and produces responses using a Large Language Model (OpenAI API) and Text-To-Speech (F5-TTS).
 
-**E2 TTS**: Flat-UNet Transformer, closest reproduction from [paper](https://arxiv.org/abs/2406.18009).
+## Features
 
-**Sway Sampling**: Inference-time flow step sampling strategy, greatly improves performance
-
-### Thanks to all the contributors !
-
-## News
-- **2024/10/08**: F5-TTS & E2 TTS base models on [🤗 Hugging Face](https://huggingface.co/SWivid/F5-TTS), [🤖 Model Scope](https://www.modelscope.cn/models/SWivid/F5-TTS_Emilia-ZH-EN), [🟣 Wisemodel](https://wisemodel.cn/models/SJTU_X-LANCE/F5-TTS_Emilia-ZH-EN).
+- Near real-time interaction.
+- Multiple monitor support.
+- Captures and processes vision locally from a specified window.
+- Transcribes audio input locally using Whisper-Large-3-Turbo model.
+- Synthesizes responses locally using F5 text-to-speech model.
+- Support for GPU acceleration using CUDA.
 
 ## Installation
 
-```bash
-# Create a python 3.10 conda env (you could also use virtualenv)
-conda create -n f5-tts python=3.10
-conda activate f5-tts
+### Prerequisites
 
-# Install pytorch with your CUDA version, e.g.
-pip install torch==2.3.0+cu118 torchaudio==2.3.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+- Windows OS
+- Python 3.10 or higher
+- CUDA-compatible GPU (NVIDIA RTX 3090/4090 recommended for faster processing)
+- Microphone set as the default input device in the system settings.
+
+### Requirements
+The following environment configuration was used for testing: Windows 10 Pro x64, Python 3.10.11 64-bit, and CUDA 11.8.
+
+Create a python 3.10 conda env (you could also use virtualenv)
+```
+conda create -n visioncompanion python=3.10
+conda activate visioncompanion
 ```
 
-Then you can choose from a few options below:
-
-### 1. As a pip package (if just for inference)
-
-```bash
-pip install git+https://github.com/SWivid/F5-TTS.git
+First make sure you have git-lfs installed (https://git-lfs.com)
 ```
-
-### 2. Local editable (if also do training, finetuning)
-
-```bash
-git clone https://github.com/SWivid/F5-TTS.git
-cd F5-TTS
-# git submodule update --init --recursive  # (optional, if need bigvgan)
+git lfs install
+```
+Install F5-TTS using the command below. You can install F5-TTS in a different directory using `cd` command (e.g., `cd c:`).
+```
+git clone https://github.com/Vinventive/F5-TTS-AIVisionCompanion.git
+cd F5-TTS-AIVisionCompanion
 pip install -e .
 ```
-If initialize submodule, you should add the following code at the beginning of `src/third_party/BigVGAN/bigvgan.py`.
-```python
-import os
-import sys
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-```
 
-### 3. Docker usage
+Download the F5 `model_1200000.safetensors` model checkpoint and place it inside `ckpts` folder 
+
+(e.g., C:/F5-TTS-AIVisionCompanion/ckpts/F5TTS_Base/model_1200000.safetensors): 
+
+[https://huggingface.co/SWivid/F5-TTS](https://huggingface.co/SWivid/F5-TTS/blob/main/F5TTS_Base/model_1200000.safetensors)
+
+Install torch with your CUDA version, e.g. :
 ```bash
-# Build from Dockerfile
-docker build -t f5tts:v1 .
-
-# Or pull from GitHub Container Registry
-docker pull ghcr.io/swivid/f5-tts:main
+pip install torch==2.3.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+pip install torchvision==0.18.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
+pip install torchaudio==2.3.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118
 ```
 
-
-## Inference
-
-### 1. Gradio App
-
-Currently supported features:
-
-- Basic TTS with Chunk Inference
-- Multi-Style / Multi-Speaker Generation
-- Voice Chat powered by Qwen2.5-3B-Instruct
-- [Custom inference with more language support](src/f5_tts/infer/SHARED.md)
+Install the required libraries using `pip`:
 
 ```bash
-# Launch a Gradio app (web interface)
-f5-tts_infer-gradio
-
-# Specify the port/host
-f5-tts_infer-gradio --port 7860 --host 0.0.0.0
-
-# Launch a share link
-f5-tts_infer-gradio --share
+pip install -r requirements.txt
 ```
 
-### 2. CLI Inference
+### Required Environment Variables
 
-```bash
-# Run with flags
-# Leave --ref_text "" will have ASR model transcribe (extra GPU memory usage)
-f5-tts_infer-cli \
---model "F5-TTS" \
---ref_audio "ref_audio.wav" \
---ref_text "The content, subtitle or transcription of reference audio." \
---gen_text "Some text you want TTS model generate for you."
+Rename the `.env.example` file to `.env` and keep it in the root directory of the project. Fill in the missing `OPENAI_API_KEY=xxxxxxxx...` variable with your own API key, voice sample and voice sample transcription you can leave unchanged.
+Use 2-15 seconds long voice sample in .wav format. If you swap a voice sample make sure to update filename in `F5_TTS_SAMPLE` and write an audio transcription for the new sample in `F5_TTS_REF_TEXT`. 
 
-# Run with default setting. src/f5_tts/infer/examples/basic/basic.toml
-f5-tts_infer-cli
-# Or with your own .toml file
-f5-tts_infer-cli -c custom.toml
+```
+OPENAI_API_KEY=your_openai_api_key
 
-# Multi voice. See src/f5_tts/infer/README.md
-f5-tts_infer-cli -c src/f5_tts/infer/examples/multi/story.toml
+F5_TTS_PATH="./..."
+F5_TTS_SAMPLE="./sample.wav"
+F5_TTS_REF_TEXT="How introverts make friends?"
+
+VISION_KEYWORDS=scene,sight,video,frame,activity,happen,going
 ```
 
-### 3. More instructions
+## Usage
 
-- In order to have better generation results, take a moment to read [detailed guidance](src/f5_tts/infer).
-- The [Issues](https://github.com/SWivid/F5-TTS/issues?q=is%3Aissue) are very useful, please try to find the solution by properly searching the keywords of problem encountered. If no answer found, then feel free to open an issue.
+### 1. Run the main script.
+```
+python visioncompanion.py
+```
+When running the script for the first time, it might take a while to download the speech recognition model `faster-whisper-large-v3` as well as image captioning model `florence-2-base-ft` for local use.
 
+### 2. Choose if you want to launch the app with vision capture preview window (`y` for yes or `n` for no).
+```
+Using cuda:0 device
+Loading Florence-2 model...
+Florence-2 model loaded.
+Do you want to launch the application with the preview window? (y/n):
+```
+### 2. Type the window title.
+```
+Do you want to launch the application with the preview window? (y/n): y
+Enter the title of the window:
+```
+The script will prompt you to enter the title of the window you want to capture. 
+You can specify a window by typing a simple keyword like `calculator` or `minecraft` etc. Searching process is not case-sensitive and will look for windows containing the provided keyword, even if the keyword is an incomplete word, prefix, or suffix. If you want to capture the view from your web browser's window and switch between different tabs, you can use simple keywords like `chrome` or `firefox` etc. In case you have multiple instances of an app open on multiple displays and you want to specify the tab use keywords like `youtube` or `twitch` etc. 
 
-## Training
+Make sure the captured window is always in the foreground and active - not minimized or in the background. (In case the window is minimized, the script will attempt to maximize it.)
 
-### 1. Gradio App
-
-Read [training & finetuning guidance](src/f5_tts/train) for more instructions.
-
-```bash
-# Quick start with Gradio web interface
-f5-tts_finetune-gradio
+### 3. Wait until the vision capture completes collecting the initial sequence of frames and speech recognition becomes active.
+```
+Enter the title of the window: youtube
+Window title set to: youtube
+Starting continuous audio recording...
 ```
 
-
-## [Evaluation](src/f5_tts/eval)
-
-
-## Development
-
-Use pre-commit to ensure code quality (will run linters and formatters automatically)
-
-```bash
-pip install pre-commit
-pre-commit install
+### 4. Start by speaking into your microphone :)
+```
+Starting continuous audio recording...
+User: Hi there, how are you doing?
+```
+### 5. Seamlessly talk about your view by naturally using vision-activating keywords during the conversation.
+```
+User: Hi there, how are you doing?
+Assistant: Just hanging out, enjoying the vibes.
+Converting audio...
+User:Can you describe what you can see on the screen?
+Assistant: There's an anime girl with long blonde hair, looking stylish in a red dress.
+Converting audio...
+User: How can I say it in Spanish?
+Assistant: "Chica con cabello rubio y vestido rojo." Simple and stylish!
+Converting audio...
 ```
 
-When making a pull request, before each commit, run: 
-
-```bash
-pre-commit run --all-files
+Keywords analyzing the sequence of the last 10 seconds.
 ```
+"scene", "sight",  "video", "frame", "activity", "happen", "going"
+```
+You have the option to add or remove keywords in the `.env` file.
 
-Note: Some model components have linting exceptions for E722 to accommodate tensor notation
-
+If you receive response: `Assistant: Error in generating response` make sure to update OpenAI API key inside `.env`. Your API key might be incorrect or missing - this variable cannot be empty.
 
 ## Acknowledgements
+- [F5-TTS](https://github.com/SWivid/F5-TTS) Original Repostory for F5-TTS (source code)
+- [AIVisionCompanion](https://github.com/Vinventive/AIVisionCompanion) Original Repository for AIVisionCompanion.
+- [Test voice sample credit](https://www.youtube.com/@miminggu) (used here only for testing) This voice sample comes from a random meme I've found on internet by author miminggu. I Don't remember which one exactly.
+
 
 - [E2-TTS](https://arxiv.org/abs/2406.18009) brilliant work, simple and effective
 - [Emilia](https://arxiv.org/abs/2407.05361), [WenetSpeech4TTS](https://arxiv.org/abs/2406.05763) valuable datasets
