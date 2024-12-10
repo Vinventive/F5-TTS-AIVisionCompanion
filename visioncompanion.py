@@ -331,6 +331,9 @@ def load_f5tts_model(model_cls, model_cfg, ckpt_step):
         logging.error(f"Checkpoint file not found: {ckpt_path}")
         raise FileNotFoundError(f"Checkpoint file not found: {ckpt_path}")
     
+    # Force model to use float32 for better compatibility
+    dtype = torch.float32
+    
     vocab_char_map, vocab_size = get_tokenizer("Emilia_ZH_EN", "pinyin")
     model = CFM(
         transformer=model_cls(
@@ -347,9 +350,12 @@ def load_f5tts_model(model_cls, model_cfg, ckpt_step):
         vocab_char_map=vocab_char_map,
     ).to(device)
 
-    # Adjust device for load_file
+    # Convert model to specified dtype
+    model = model.to(dtype)
+    
+    # Load checkpoint with consistent dtype
     load_device = 'cuda:0' if device.startswith('cuda') else device
-    model = load_checkpoint(model, ckpt_path, load_device, use_ema=True)
+    model = load_checkpoint(model, ckpt_path, load_device, dtype=dtype, use_ema=True)
     return model
 
 F5TTS_model_cfg = dict(
@@ -379,11 +385,15 @@ def generate_audio(gen_text, ref_audio_path, ref_text, exp_name="F5-TTS"):
         logging.error(f"TTS model {exp_name} is not loaded.")
         return None, None
 
+    # Force float32 for all operations some operations are being performed in float32. We need to ensure consistent precision throughout.
+    dtype = torch.float32
+    
     # Use preprocess_ref_audio_text from infer utils
     ref_audio, ref_text = preprocess_ref_audio_text(ref_audio_path, ref_text, device=device)
     
-    # Load reference audio
+    # Load reference audio with consistent dtype
     audio, sr = torchaudio.load(ref_audio)
+    audio = audio.to(dtype)
     if audio.shape[0] > 1:
         audio = torch.mean(audio, dim=0, keepdim=True)
 
