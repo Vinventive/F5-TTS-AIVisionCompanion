@@ -136,9 +136,7 @@ If you receive response: `Assistant: Error in generating response` make sure to 
 ## Acknowledgements
 - [F5-TTS](https://github.com/SWivid/F5-TTS) Original Repostory for F5-TTS (source code)
 - [AIVisionCompanion](https://github.com/Vinventive/AIVisionCompanion) Original Repository for AIVisionCompanion.
-- [Test voice sample credit](https://www.youtube.com/@miminggu) (used here only for testing) This voice sample comes from a random meme I've found on internet by author miminggu. I Don't remember which one exactly.
-
-
+- New Test Voice Sample was generated with AI (feel free to use for testing)
 - [E2-TTS](https://arxiv.org/abs/2406.18009) brilliant work, simple and effective
 - [Emilia](https://arxiv.org/abs/2407.05361), [WenetSpeech4TTS](https://arxiv.org/abs/2406.05763) valuable datasets
 - [lucidrains](https://github.com/lucidrains) initial CFM structure with also [bfs18](https://github.com/bfs18) for discussion
