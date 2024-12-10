@@ -94,17 +94,18 @@ else:
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-# Load the Whisper large-v3-turbo model using Transformers
-device_str = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cuda:0" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
 torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+print(f"Using {device} device")
 
+# Load the Whisper large-v3-turbo model using Transformers
 model_id = "openai/whisper-large-v3-turbo"
 
 try:
     whisper_model = AutoModelForSpeechSeq2Seq.from_pretrained(
         model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
     )
-    whisper_model.to(device_str)
+    whisper_model.to(device)
     logging.info("Whisper model loaded successfully.")
 except Exception as e:
     logging.error(f"Failed to load Whisper model: {e}")
@@ -118,7 +119,7 @@ pipe = pipeline(
     tokenizer=processor.tokenizer,
     feature_extractor=processor.feature_extractor,
     torch_dtype=torch_dtype,
-    device=device_str,
+    device=device,
 )
 
 output_dir = 'outputs'
@@ -311,16 +312,6 @@ cfg_strength = 2.0
 ode_method = "euler"
 sway_sampling_coef = -1.0
 speed = 1.0
-
-# Adjust the device variable
-if torch.cuda.is_available():
-    device = 'cuda:0'
-elif torch.backends.mps.is_available():
-    device = 'mps'
-else:
-    device = 'cpu'
-
-print(f"Using {device} device")
 
 # Load F5TTS Model
 def load_f5tts_model(model_cls, model_cfg, ckpt_step):
